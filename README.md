@@ -30,6 +30,17 @@ npm run package:smoke # Verify npm pack
 npm run release:check # Full release checklist
 ```
 
+## Development
+
+Run the same checks maintainers use before opening a PR:
+
+```sh
+npm test
+npm run build
+npm run smoke
+npm run package:smoke
+npm run release:check
+```
 ## License
 
 MIT
