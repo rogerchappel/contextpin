@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -24,4 +25,39 @@ test('LICENSE file exists and is included in files', () => {
   assert.ok(existsSync(join(pkgRoot, 'LICENSE')));
   const pkg = JSON.parse(readFileSync(join(pkgRoot, 'package.json'), 'utf8'));
   assert.ok(pkg.files.includes('LICENSE'));
+});
+
+test('package allowlist includes CLI support documentation and fixtures', () => {
+  const pkg = JSON.parse(readFileSync(join(pkgRoot, 'package.json'), 'utf8'));
+
+  assert.ok(pkg.files.includes('docs'));
+  assert.ok(pkg.files.includes('fixtures'));
+  assert.ok(existsSync(join(pkgRoot, 'docs/PRD.md')));
+  assert.ok(existsSync(join(pkgRoot, 'fixtures/cli/help.txt')));
+});
+
+test('CLI help output matches the release fixture', () => {
+  const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--help'], {
+    cwd: pkgRoot,
+    encoding: 'utf8',
+  });
+  const expected = readFileSync(join(pkgRoot, 'fixtures/cli/help.txt'), 'utf8');
+
+  assert.strictEqual(result.status, 0);
+  assert.strictEqual(result.stderr, '');
+  assert.strictEqual(result.stdout, expected);
+});
+
+test('CLI version output matches package metadata and fixture', () => {
+  const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--version'], {
+    cwd: pkgRoot,
+    encoding: 'utf8',
+  });
+  const expected = readFileSync(join(pkgRoot, 'fixtures/cli/version.txt'), 'utf8');
+  const pkg = JSON.parse(readFileSync(join(pkgRoot, 'package.json'), 'utf8'));
+
+  assert.strictEqual(result.status, 0);
+  assert.strictEqual(result.stderr, '');
+  assert.strictEqual(result.stdout, expected);
+  assert.strictEqual(expected.trim(), pkg.version);
 });

@@ -1,0 +1,10 @@
+contextpin
+
+Early-stage local-first developer tool scaffold.
+
+Usage:
+  contextpin --help
+  contextpin --version
+
+The implementation is intentionally minimal while the project is pre-1.0.
+See docs/PRD.md for planned scope.
