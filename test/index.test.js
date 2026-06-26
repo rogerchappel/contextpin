@@ -27,6 +27,15 @@ test('LICENSE file exists and is included in files', () => {
   assert.ok(pkg.files.includes('LICENSE'));
 });
 
+test('package allowlist includes CLI support documentation and fixtures', () => {
+  const pkg = JSON.parse(readFileSync(join(pkgRoot, 'package.json'), 'utf8'));
+
+  assert.ok(pkg.files.includes('docs'));
+  assert.ok(pkg.files.includes('fixtures'));
+  assert.ok(existsSync(join(pkgRoot, 'docs/PRD.md')));
+  assert.ok(existsSync(join(pkgRoot, 'fixtures/cli/help.txt')));
+});
+
 test('CLI help output matches the release fixture', () => {
   const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--help'], {
     cwd: pkgRoot,
