@@ -22,11 +22,12 @@
     "CODE_OF_CONDUCT.md"
   ],
   "scripts": {
+    "check": "npm run build",
     "build": "node --check src/index.js",
     "test": "node --test",
     "smoke": "node src/index.js --help && npm run package:smoke",
     "package:smoke": "npm pack --dry-run",
-    "release:check": "npm test && npm run build && npm run smoke"
+    "release:check": "npm run check && npm test && npm run smoke"
   },
   "keywords": [
     "context",
