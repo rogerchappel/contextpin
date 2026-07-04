@@ -10,6 +10,7 @@ format and uses semantic versioning when versioned releases are published.
 ### Added
 
 - Initial project setup.
+- Release readiness: package smoke now inspects the npm tarball for the CLI entrypoint, planned-scope docs, license, security policy, contribution guide, changelog, and code of conduct.
 
 ## Release Links
 

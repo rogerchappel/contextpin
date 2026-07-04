@@ -26,7 +26,7 @@
     "build": "node --check src/index.js",
     "test": "node --test",
     "smoke": "node src/index.js --help && npm run package:smoke",
-    "package:smoke": "npm pack --dry-run",
+    "package:smoke": "node scripts/package-smoke.mjs",
     "release:check": "npm run check && npm test && npm run smoke"
   },
   "keywords": [
