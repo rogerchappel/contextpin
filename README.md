@@ -41,7 +41,7 @@ npm test
 
 ```bash
 npm test              # Run tests
-npm run package:smoke # Verify npm pack
+npm run package:smoke # Verify npm pack contents
 npm run release:check # Full release checklist
 ```
 
@@ -56,6 +56,10 @@ npm run smoke
 npm run package:smoke
 npm run release:check
 ```
+
+`npm run package:smoke` inspects the npm tarball and fails if the CLI entrypoint,
+planned-scope docs, license, security policy, contribution guide, changelog, or
+code of conduct would be missing from the published package.
 ## License
 
 MIT
