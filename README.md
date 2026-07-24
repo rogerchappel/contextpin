@@ -8,15 +8,22 @@ This repository is early-stage. Confirm the current support, release, and securi
 
 ## Install
 
+`contextpin` is not currently published to npm. Clone this repository and
+install its dependencies locally:
+
 ```sh
+git clone https://github.com/rogerchappel/contextpin.git
+cd contextpin
 npm install
 ```
 
 ## Quickstart
 
+From the repository root, run the local CLI entrypoint:
+
 ```sh
-npx contextpin --help
-npx contextpin --version
+node src/index.js --help
+node src/index.js --version
 ```
 
 The current CLI intentionally exposes only `--help` and `--version` while the
