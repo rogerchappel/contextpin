@@ -36,6 +36,16 @@ test('package allowlist includes CLI support documentation and fixtures', () => 
   assert.ok(existsSync(join(pkgRoot, 'fixtures/cli/help.txt')));
 });
 
+test('README quickstart uses the unpublished local CLI entrypoint', () => {
+  const readme = readFileSync(join(pkgRoot, 'README.md'), 'utf8');
+
+  assert.match(readme, /not (?:currently )?published to npm/i);
+  assert.match(readme, /git clone https:\/\/github\.com\/rogerchappel\/contextpin\.git/);
+  assert.match(readme, /node src\/index\.js --help/);
+  assert.match(readme, /node src\/index\.js --version/);
+  assert.doesNotMatch(readme, /\bnpx\s+contextpin\b/);
+});
+
 test('CLI help output matches the release fixture', () => {
   const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--help'], {
     cwd: pkgRoot,
