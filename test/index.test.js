@@ -43,6 +43,8 @@ test('README quickstart uses the unpublished local CLI entrypoint', () => {
   assert.match(readme, /git clone https:\/\/github\.com\/rogerchappel\/contextpin\.git/);
   assert.match(readme, /node src\/index\.js --help/);
   assert.match(readme, /node src\/index\.js --version/);
+  assert.match(readme, /unknown flags/);
+  assert.match(readme, /standard error and exit with a nonzero status/);
   assert.doesNotMatch(readme, /\bnpx\s+contextpin\b/);
 });
 

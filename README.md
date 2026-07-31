@@ -22,13 +22,19 @@ npm install
 From the repository root, run the local CLI entrypoint:
 
 ```sh
+node src/index.js
 node src/index.js --help
+node src/index.js -h
 node src/index.js --version
+node src/index.js -v
 ```
 
-The current CLI intentionally exposes only `--help` and `--version` while the
-pre-1.0 context pinning workflow is being defined. See [docs/PRD.md](docs/PRD.md)
-for the planned product scope.
+The current CLI displays help when run without arguments and supports the
+`--help`/`-h` and `--version`/`-v` options. Positional commands, unknown flags,
+and extra arguments are not supported: they print a short usage diagnostic to
+standard error and exit with a nonzero status. The pre-1.0 context pinning
+workflow is still being defined; see [docs/PRD.md](docs/PRD.md) for the planned
+product scope.
 
 ## Limitations
 
