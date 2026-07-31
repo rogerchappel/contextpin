@@ -43,31 +43,68 @@ test('README quickstart uses the unpublished local CLI entrypoint', () => {
   assert.match(readme, /git clone https:\/\/github\.com\/rogerchappel\/contextpin\.git/);
   assert.match(readme, /node src\/index\.js --help/);
   assert.match(readme, /node src\/index\.js --version/);
+  assert.match(readme, /unknown flags/);
+  assert.match(readme, /standard error and exit with a nonzero status/);
   assert.doesNotMatch(readme, /\bnpx\s+contextpin\b/);
 });
 
-test('CLI help output matches the release fixture', () => {
-  const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--help'], {
-    cwd: pkgRoot,
-    encoding: 'utf8',
-  });
+test('CLI help output matches the release fixture for supported invocations', () => {
   const expected = readFileSync(join(pkgRoot, 'fixtures/cli/help.txt'), 'utf8');
 
-  assert.strictEqual(result.status, 0);
-  assert.strictEqual(result.stderr, '');
-  assert.strictEqual(result.stdout, expected);
+  for (const args of [[], ['--help'], ['-h']]) {
+    const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), ...args], {
+      cwd: pkgRoot,
+      encoding: 'utf8',
+    });
+
+    assert.strictEqual(result.status, 0);
+    assert.strictEqual(result.stderr, '');
+    assert.strictEqual(result.stdout, expected);
+  }
 });
 
-test('CLI version output matches package metadata and fixture', () => {
-  const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), '--version'], {
-    cwd: pkgRoot,
-    encoding: 'utf8',
-  });
+test('CLI version output matches package metadata and fixture for supported flags', () => {
   const expected = readFileSync(join(pkgRoot, 'fixtures/cli/version.txt'), 'utf8');
   const pkg = JSON.parse(readFileSync(join(pkgRoot, 'package.json'), 'utf8'));
 
-  assert.strictEqual(result.status, 0);
-  assert.strictEqual(result.stderr, '');
-  assert.strictEqual(result.stdout, expected);
+  for (const arg of ['--version', '-v']) {
+    const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), arg], {
+      cwd: pkgRoot,
+      encoding: 'utf8',
+    });
+
+    assert.strictEqual(result.status, 0);
+    assert.strictEqual(result.stderr, '');
+    assert.strictEqual(result.stdout, expected);
+  }
   assert.strictEqual(expected.trim(), pkg.version);
+});
+
+test('CLI rejects unsupported positional commands and flags', () => {
+  for (const arg of ['bogus', '--wat']) {
+    const result = spawnSync(process.execPath, [join(pkgRoot, 'src/index.js'), arg], {
+      cwd: pkgRoot,
+      encoding: 'utf8',
+    });
+
+    assert.strictEqual(result.status, 1);
+    assert.strictEqual(result.stdout, '');
+    assert.match(result.stderr, new RegExp(`^Unsupported argument: ${arg}\\n`));
+    assert.match(result.stderr, /Run contextpin --help for usage\.\n$/);
+  }
+});
+
+test('CLI rejects extra arguments after a supported option', () => {
+  const result = spawnSync(
+    process.execPath,
+    [join(pkgRoot, 'src/index.js'), '--help', 'extra'],
+    { cwd: pkgRoot, encoding: 'utf8' },
+  );
+
+  assert.strictEqual(result.status, 1);
+  assert.strictEqual(result.stdout, '');
+  assert.strictEqual(
+    result.stderr,
+    'Unsupported arguments: --help extra\nRun contextpin --help for usage.\n',
+  );
 });

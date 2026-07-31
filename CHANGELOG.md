@@ -12,6 +12,11 @@ format and uses semantic versioning when versioned releases are published.
 - Initial project setup.
 - Release readiness: package smoke now inspects the npm tarball for the CLI entrypoint, planned-scope docs, license, security policy, contribution guide, changelog, and code of conduct.
 
+### Changed
+
+- The CLI now rejects unsupported commands, flags, and extra arguments with a
+  nonzero exit status instead of displaying help successfully.
+
 ## Release Links
 
 - Unreleased:
