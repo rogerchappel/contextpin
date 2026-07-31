@@ -12,10 +12,16 @@ The implementation is intentionally minimal while the project is pre-1.0.
 See docs/PRD.md for planned scope.`;
 
 const version = "0.1.0";
-const arg = process.argv[2];
+const args = process.argv.slice(2);
+const [arg] = args;
 
-if (arg === "--version" || arg === "-v") {
+if (args.length === 0 || (args.length === 1 && (arg === "--help" || arg === "-h"))) {
+  console.log(help);
+} else if (args.length === 1 && (arg === "--version" || arg === "-v")) {
   console.log(version);
 } else {
-  console.log(help);
+  const label = args.length === 1 ? "argument" : "arguments";
+  console.error(`Unsupported ${label}: ${args.join(" ")}`);
+  console.error("Run contextpin --help for usage.");
+  process.exitCode = 1;
 }
